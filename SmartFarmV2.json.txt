@@ -1,1 +1,498 @@
-[{"id":"5a52ebb2.05fb64","type":"inject","z":"ce9ab076.07e29","name":"","topic":"","payload":"send","payloadType":"str","repeat":"15","crontab":"","once":false,"onceDelay":0.1,"x":250,"y":520,"wires":[["2f0c8e38.49ed22"]]}]
+[
+    {
+        "id": "ce9ab076.07e29",
+        "type": "tab",
+        "label": "Flow 5",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "62763b16.4b6844",
+        "type": "rpi-dht22",
+        "z": "ce9ab076.07e29",
+        "name": "",
+        "topic": "rpi-dht22",
+        "dht": "11",
+        "pintype": "0",
+        "pin": 4,
+        "x": 320,
+        "y": 180,
+        "wires": [
+            [
+                "bbc8882e.8ce1b8",
+                "c3678635.ef4c68"
+            ]
+        ]
+    },
+    {
+        "id": "bbc8882e.8ce1b8",
+        "type": "function",
+        "z": "ce9ab076.07e29",
+        "name": "Humidity",
+        "func": "msg.payload = msg.humidity;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 540,
+        "y": 120,
+        "wires": [
+            [
+                "27925e36.2a8552"
+            ]
+        ]
+    },
+    {
+        "id": "c3678635.ef4c68",
+        "type": "function",
+        "z": "ce9ab076.07e29",
+        "name": "Temperature",
+        "func": "msg.payload = msg.payload;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 550,
+        "y": 180,
+        "wires": [
+            [
+                "27925e36.2a8552"
+            ]
+        ]
+    },
+    {
+        "id": "290c0941.656c46",
+        "type": "mqtt out",
+        "z": "ce9ab076.07e29",
+        "name": "",
+        "topic": "/Bom Kritsakorn",
+        "qos": "",
+        "retain": "",
+        "broker": "3b19dc51.13f854",
+        "x": 1100,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "27925e36.2a8552",
+        "type": "join",
+        "z": "ce9ab076.07e29",
+        "name": "",
+        "mode": "custom",
+        "build": "array",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": false,
+        "timeout": "",
+        "count": "2",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "num",
+        "reduceFixup": "",
+        "x": 750,
+        "y": 180,
+        "wires": [
+            [
+                "8fc22225.2707"
+            ]
+        ]
+    },
+    {
+        "id": "8fc22225.2707",
+        "type": "function",
+        "z": "ce9ab076.07e29",
+        "name": "JSON",
+        "func": "msg.payload = {\"database\":\"Bom Kritsakorn\",\n        \"data\":[{\"measurement\":\"Bom Kritsakorn\",\"tags\":{\"tag\":\"g\"},\"fields\":{\"humid\":msg.payload[0],\"tem\":msg.payload[1]}}]};\nreturn msg;\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 910,
+        "y": 180,
+        "wires": [
+            [
+                "290c0941.656c46",
+                "3c036e26.3a6ce2"
+            ]
+        ]
+    },
+    {
+        "id": "d6acb4ca.a353c8",
+        "type": "inject",
+        "z": "ce9ab076.07e29",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "15",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 110,
+        "y": 180,
+        "wires": [
+            [
+                "62763b16.4b6844"
+            ]
+        ]
+    },
+    {
+        "id": "69836fa4.f7021",
+        "type": "debug",
+        "z": "ce9ab076.07e29",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 790,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "5f6c6d4.4d35194",
+        "type": "sensor-ds18b20",
+        "z": "ce9ab076.07e29",
+        "name": "",
+        "topic": "",
+        "sensorid": "28-011453742daa",
+        "timer": "15",
+        "repeat": false,
+        "x": 350,
+        "y": 320,
+        "wires": [
+            [
+                "d3e89172.8f4fd"
+            ]
+        ]
+    },
+    {
+        "id": "51122bcd.e3f564",
+        "type": "sensor-ds18b20",
+        "z": "ce9ab076.07e29",
+        "name": "",
+        "topic": "",
+        "sensorid": "28-0300a2791db2",
+        "timer": "15",
+        "repeat": false,
+        "x": 350,
+        "y": 420,
+        "wires": [
+            [
+                "238b0c13.43c764"
+            ]
+        ]
+    },
+    {
+        "id": "d3e89172.8f4fd",
+        "type": "function",
+        "z": "ce9ab076.07e29",
+        "name": "Temperature",
+        "func": "msg.payload = msg.payload;\nif(msg.payload === false)\n{\n    return null;\n}\nelse\n{\n   return msg;\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 530,
+        "y": 320,
+        "wires": [
+            [
+                "69836fa4.f7021",
+                "2e42c785.8d89f8"
+            ]
+        ]
+    },
+    {
+        "id": "238b0c13.43c764",
+        "type": "function",
+        "z": "ce9ab076.07e29",
+        "name": "Temperature",
+        "func": "msg.payload = msg.payload;\nif(msg.payload === false)\n{\n    return null;\n}\nelse\n{\n   return msg;\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 530,
+        "y": 420,
+        "wires": [
+            [
+                "962f607f.0762",
+                "48fdb17f.00349"
+            ]
+        ]
+    },
+    {
+        "id": "98b0ca68.0e44c8",
+        "type": "inject",
+        "z": "ce9ab076.07e29",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "15",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 110,
+        "y": 320,
+        "wires": [
+            [
+                "5f6c6d4.4d35194",
+                "51122bcd.e3f564"
+            ]
+        ]
+    },
+    {
+        "id": "c57c5525.27f5f8",
+        "type": "mqtt out",
+        "z": "ce9ab076.07e29",
+        "name": "",
+        "topic": "/Bom Kritsakorn",
+        "qos": "",
+        "retain": "",
+        "broker": "3b19dc51.13f854",
+        "x": 1200,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "2e42c785.8d89f8",
+        "type": "function",
+        "z": "ce9ab076.07e29",
+        "name": "JSON",
+        "func": "msg.payload = {\"database\":\"Bom Kritsakorn\",\n        \"data\":[{\"measurement\":\"Bom Kritsakorn\",\"tags\":{\"tag\":\"g\"},\"fields\":{\"temL1\":String(msg.payload)}}]};\nreturn msg;\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 830,
+        "y": 320,
+        "wires": [
+            [
+                "c57c5525.27f5f8",
+                "4b81f875.5a6da8"
+            ]
+        ]
+    },
+    {
+        "id": "962f607f.0762",
+        "type": "debug",
+        "z": "ce9ab076.07e29",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 790,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "48fdb17f.00349",
+        "type": "function",
+        "z": "ce9ab076.07e29",
+        "name": "JSON",
+        "func": "msg.payload = {\"database\":\"Bom Kritsakorn\",\n        \"data\":[{\"measurement\":\"Bom Kritsakorn\",\"tags\":{\"tag\":\"g\"},\"fields\":{\"temL2\":String(msg.payload)}}]};\nreturn msg;\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 830,
+        "y": 420,
+        "wires": [
+            [
+                "c57c5525.27f5f8",
+                "6539b93c.123b28"
+            ]
+        ]
+    },
+    {
+        "id": "4b81f875.5a6da8",
+        "type": "debug",
+        "z": "ce9ab076.07e29",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 1170,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "6539b93c.123b28",
+        "type": "debug",
+        "z": "ce9ab076.07e29",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 1190,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "3c036e26.3a6ce2",
+        "type": "debug",
+        "z": "ce9ab076.07e29",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 1190,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "26f0c5a6.59eafa",
+        "type": "mqtt in",
+        "z": "ce9ab076.07e29",
+        "name": "",
+        "topic": "/Bom Kritsakorn",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "3b19dc51.13f854",
+        "x": 440,
+        "y": 60,
+        "wires": [
+            [
+                "e4d5b6f9.09ded8"
+            ]
+        ]
+    },
+    {
+        "id": "e4d5b6f9.09ded8",
+        "type": "debug",
+        "z": "ce9ab076.07e29",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 800,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "dffc670e.a23128",
+        "type": "rpi-gpio in",
+        "z": "ce9ab076.07e29",
+        "name": "",
+        "pin": "12",
+        "intype": "tri",
+        "debounce": "25",
+        "read": false,
+        "x": 250,
+        "y": 620,
+        "wires": [
+            [
+                "5e885658.4d8a78"
+            ]
+        ]
+    },
+    {
+        "id": "995eeb4e.677658",
+        "type": "function",
+        "z": "ce9ab076.07e29",
+        "name": "JSON",
+        "func": "msg.payload = {\"database\":\"Bom Kritsakorn\",\n        \"data\":[{\"measurement\":\"Bom Kritsakorn\",\"tags\":{\"tag\":\"g\"},\"fields\":msg.payload}]};\nreturn msg;\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 790,
+        "y": 620,
+        "wires": [
+            [
+                "adee03d6.eb6bc",
+                "c57c5525.27f5f8"
+            ]
+        ]
+    },
+    {
+        "id": "adee03d6.eb6bc",
+        "type": "debug",
+        "z": "ce9ab076.07e29",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 1070,
+        "y": 620,
+        "wires": []
+    },
+    {
+        "id": "2f0c8e38.49ed22",
+        "type": "function",
+        "z": "ce9ab076.07e29",
+        "name": "interval",
+        "func": "out=context.data||{}\nnode.log(\"start\");\nnode.log(\"start stored\");\ntopic =msg.topic;\nnode.log(topic);\n\nif(msg.payload ==\"send\")\n{\n    msg.payload=context.data;\n    msg.out=\"sent data to \";\n    \n    context.data=msg.payload;\n    return msg;\n}\nelse\n{\n    out[topic]=msg.payload;\n    context.data=out;\n    node.log(\"Stored\");\n    return null;\n}\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 580,
+        "y": 620,
+        "wires": [
+            [
+                "995eeb4e.677658"
+            ]
+        ]
+    },
+    {
+        "id": "5a52ebb2.05fb64",
+        "type": "inject",
+        "z": "ce9ab076.07e29",
+        "name": "",
+        "topic": "",
+        "payload": "send",
+        "payloadType": "str",
+        "repeat": "15",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 250,
+        "y": 520,
+        "wires": [
+            [
+                "2f0c8e38.49ed22"
+            ]
+        ]
+    },
+    {
+        "id": "5e885658.4d8a78",
+        "type": "function",
+        "z": "ce9ab076.07e29",
+        "name": "string",
+        "func": "msg.payload = String(msg.payload)\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 390,
+        "y": 620,
+        "wires": [
+            [
+                "2f0c8e38.49ed22"
+            ]
+        ]
+    },
+    {
+        "id": "3b19dc51.13f854",
+        "type": "mqtt-broker",
+        "z": "",
+        "name": "Bom Kritsakorn",
+        "broker": "167.71.219.4",
+        "port": "1883",
+        "clientid": "",
+        "usetls": false,
+        "compatmode": true,
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": ""
+    }
+]
